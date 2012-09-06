@@ -1,4 +1,6 @@
-﻿require(["esri/map", "dojo/dom", "dojo/on", "dojo/domReady!"], function (Map, dom, on, parser) {
+﻿/*global require, esri, dojo*/
+/*jslint browser: true */
+require(["dojo/dom", "dojo/on", "esri/map", "dojo/domReady!"], function (dom, on) {
 	"use strict";
 
 	var map, basemap;
@@ -7,7 +9,7 @@
 	map = new esri.Map(dom.byId("map"));
 
 	// Add create and add a layer.
-	basemap = new esri.layers.ArcGISTiledMapServiceLayer("http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer");
+	basemap = new esri.layers.ArcGISTiledMapServiceLayer("http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer");
 	map.addLayer(basemap);
 
 	// When the layer has loaded, add an event that will resize the map when the browser window resizes.
