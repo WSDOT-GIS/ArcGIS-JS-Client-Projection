@@ -1,10 +1,10 @@
-﻿/*global require, esri, dojo*/
+﻿/*global require, esri, dojo, Proj4js*/
 /*jslint browser: true */
 
 /// <reference path="jsapi_vsdoc_v31.js" />
 /// <reference path="proj4js/proj4js-combined.js" />
 
-require(["dojo/dom", "dojo/on", "dijit/Dialog", "esri/map", "esri/tasks/geometry", "dojo/domReady!"], function (dom, on, Dialog) {
+require(["dojo/dom", "dojo/on", "dojo/html", "dijit/Dialog", "esri/map", "esri/tasks/geometry", "dojo/domReady!"], function (dom, on, html, Dialog) {
 	"use strict";
 
 	var map, extent, basemap, geometryService, dialog;
@@ -50,34 +50,39 @@ require(["dojo/dom", "dojo/on", "dijit/Dialog", "esri/map", "esri/tasks/geometry
 		});
 
 		dojo.connect(map, "onClick", function (evt) {
-			var originalPoint, proj4jsPoint, geometryServicePoint, params;
+			var originalPoint, proj4jsPoint, params, content;
 			originalPoint = evt.mapPoint;
-			// console.log("original", JSON.stringify(originalPoint.toJson()));
+			map.graphics.add(new esri.Graphic(originalPoint, new esri.symbol.SimpleMarkerSymbol()));
 			proj4jsPoint = getProjectedPoint(originalPoint);
-			// console.log("Proj4JS", JSON.stringify(proj4jsPoint.toJson()));
 
 			params = new esri.tasks.ProjectParameters();
 			params.geometries = [originalPoint];
 			params.outSR = new esri.SpatialReference({ wkid: 2927 });
-			geometryService.project(params, function (geometries) {
-				var content;
-				// console.log("geometry service", JSON.stringify(geometries[0].toJson()));
-				content = ["<dl><dt>Original Point</dt><dd>", JSON.stringify(originalPoint.toJson()),
-				"</dd><dt>Proj4js Projected</dt><dd>", JSON.stringify(proj4jsPoint.toJson()),
-				"</dd><dt>Geometry Service Projected</dt><dd>", JSON.stringify(geometries[0].toJson())].join("");
 
-				if (dialog) {
-					// Update dialog
-					dialog.set("content", content);
-				} else {
-					// Create the dialog.
-					dialog = new Dialog({
-						id: "dialog",
-						title: "Projection Results",
-						content: content
-					});
-				}
-				dialog.show();
+			content = ["<dl><dt>Original Point</dt><dd>", JSON.stringify(originalPoint.toJson()),
+				"</dd><dt>Proj4js Projected</dt><dd>", JSON.stringify(proj4jsPoint.toJson()),
+				"</dd><dt>Geometry Service Projected</dt><dd id='geometryServiceResults'><progress>Please wait...</progress></dd>"].join("");
+
+			if (dialog) {
+				// Update dialog
+				dialog.set("content", content);
+			} else {
+				// Create the dialog.
+				dialog = new Dialog({
+					id: "dialog",
+					title: "Projection Results",
+					content: content
+				});
+
+				dialog.on("hide", function () {
+					map.graphics.clear();
+				});
+			}
+			dialog.show();
+			geometryService.project(params, function (geometries) {
+				html.set(dom.byId("geometryServiceResults"), JSON.stringify(geometries[0].toJson()));
+			}, function (error) {
+				html.set(dom.byId("geometryServiceResults"), error.message || error);
 			});
 
 		});
