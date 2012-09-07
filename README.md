@@ -6,6 +6,7 @@ The purpose of this project is to compare the results of two different projectio
 ## References ##
 * This project uses code from [Proj4JS](https://github.com/bewest/proj4js).
 * References the [ArcGIS API for JavaScript](http://links.esri.com/javascript)
+* [json2.js by Douglas Crockford](https://github.com/douglascrockford/JSON-js) is used for compatibility with older browsers that do not support `window.JSON`.
 
 ## Licensing ##
 Licensed under [The MIT License](http://opensource.org/licenses/MIT).
