@@ -4,10 +4,10 @@
 /// <reference path="jsapi_vsdoc_v31.js" />
 /// <reference path="proj4js/proj4js-combined.js" />
 
-require(["dojo/dom", "dojo/on", "esri/map", "dojo/domReady!"], function (dom, on) {
+require(["dojo/dom", "dojo/on", "esri/map", "esri/tasks/geometry", "dojo/domReady!"], function (dom, on) {
 	"use strict";
 
-	var map, basemap;
+	var map, basemap, geometryService;
 
 	function getProjectedPoint(point) {
 		var sourcePrj, destPrj;
@@ -33,6 +33,8 @@ require(["dojo/dom", "dojo/on", "esri/map", "dojo/domReady!"], function (dom, on
 	// Create the map object
 	map = new esri.Map(dom.byId("map"));
 
+	geometryService = new esri.tasks.GeometryService("http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer");
+
 	// Add create and add a layer.
 	basemap = new esri.layers.ArcGISTiledMapServiceLayer("http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer");
 	map.addLayer(basemap);
@@ -44,10 +46,19 @@ require(["dojo/dom", "dojo/on", "esri/map", "dojo/domReady!"], function (dom, on
 		});
 
 		dojo.connect(map, "onClick", function (evt) {
-			var point;
-			console.debug(evt.mapPoint);
-			point = getProjectedPoint(evt.mapPoint);
-			console.debug(point);
+			var originalPoint, proj4jsPoint, geometryServicePoint, params;
+			originalPoint = evt.mapPoint;
+			console.debug(originalPoint);
+			proj4jsPoint = getProjectedPoint(originalPoint);
+			console.debug(proj4jsPoint);
+
+			params = new esri.tasks.ProjectParameters();
+			params.geometries = [originalPoint];
+			params.outSR = new esri.SpatialReference({ wkid: 2927 });
+			geometryService.project(params, function (geometries) {
+				console.debug(geometries);
+			});
+
 		});
 	});
 });
