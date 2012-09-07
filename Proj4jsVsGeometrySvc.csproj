@@ -53,7 +53,9 @@
   <ItemGroup>
     <Content Include="default.html" />
     <Content Include="Scripts\default.js" />
-    <Content Include="Scripts\jsapi_vsdoc_v31.js" />
+    <Content Include="Scripts\proj4js\defs\EPSG2927.js" />
+    <Content Include="Scripts\proj4js\defs\GOOGLE.js" />
+    <Content Include="Scripts\proj4js\proj4js-compressed.js" />
     <Content Include="Style\default.css" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

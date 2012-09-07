@@ -4,17 +4,17 @@
 /// <reference path="jsapi_vsdoc_v31.js" />
 /// <reference path="proj4js/proj4js-combined.js" />
 
-require(["dojo/dom", "dojo/on", "esri/map", "esri/tasks/geometry", "dojo/domReady!"], function (dom, on) {
+require(["dojo/dom", "dojo/on", "dijit/Dialog", "esri/map", "esri/tasks/geometry", "dojo/domReady!"], function (dom, on, Dialog) {
 	"use strict";
 
-	var map, basemap, geometryService;
+	var map, basemap, geometryService, dialog;
 
 	function getProjectedPoint(point) {
 		var sourcePrj, destPrj;
 
 		// Set up the source and destination projections.
-		sourcePrj = new Proj4js.Proj('EPSG:3857');
-		destPrj = new Proj4js.Proj('EPSG:2927');
+		sourcePrj = new Proj4js.Proj('EPSG:3857');  // Web mercator auxiliary sphere
+		destPrj = new Proj4js.Proj('EPSG:2927'); // WA NAD HARN State Plane South
 
 		// If this is a click event, the parameter will be an event instead of a point.  Get the map point from the event.
 		if (point.mapPoint) {
@@ -48,15 +48,32 @@ require(["dojo/dom", "dojo/on", "esri/map", "esri/tasks/geometry", "dojo/domRead
 		dojo.connect(map, "onClick", function (evt) {
 			var originalPoint, proj4jsPoint, geometryServicePoint, params;
 			originalPoint = evt.mapPoint;
-			console.debug(originalPoint);
+			// console.log("original", JSON.stringify(originalPoint.toJson()));
 			proj4jsPoint = getProjectedPoint(originalPoint);
-			console.debug(proj4jsPoint);
+			// console.log("Proj4JS", JSON.stringify(proj4jsPoint.toJson()));
 
 			params = new esri.tasks.ProjectParameters();
 			params.geometries = [originalPoint];
 			params.outSR = new esri.SpatialReference({ wkid: 2927 });
 			geometryService.project(params, function (geometries) {
-				console.debug(geometries);
+				var content;
+				// console.log("geometry service", JSON.stringify(geometries[0].toJson()));
+				content = ["<dl><dt>Original Point</dt><dd>", JSON.stringify(originalPoint.toJson()),
+				"</dd><dt>Proj4js Projected</dt><dd>", JSON.stringify(proj4jsPoint.toJson()),
+				"</dd><dt>Geometry Service Projected</dt><dd>", JSON.stringify(geometries[0].toJson())].join("");
+
+				if (dialog) {
+					// Update dialog
+					dialog.set("content", content);
+				} else {
+					// Create the dialog.
+					dialog = new Dialog({
+						id: "dialog",
+						title: "Projection Results",
+						content: content
+					});
+				}
+				dialog.show();
 			});
 
 		});
