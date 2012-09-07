@@ -53,6 +53,7 @@
   <ItemGroup>
     <Content Include="default.html" />
     <Content Include="Scripts\default.js" />
+    <Content Include="Scripts\jsapi_vsdoc_v31.js" />
     <Content Include="Style\default.css" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
