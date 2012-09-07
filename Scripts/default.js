@@ -7,7 +7,7 @@
 require(["dojo/dom", "dojo/on", "dijit/Dialog", "esri/map", "esri/tasks/geometry", "dojo/domReady!"], function (dom, on, Dialog) {
 	"use strict";
 
-	var map, basemap, geometryService, dialog;
+	var map, extent, basemap, geometryService, dialog;
 
 	function getProjectedPoint(point) {
 		var sourcePrj, destPrj;
@@ -31,7 +31,11 @@ require(["dojo/dom", "dojo/on", "dijit/Dialog", "esri/map", "esri/tasks/geometry
 	}
 
 	// Create the map object
-	map = new esri.Map(dom.byId("map"));
+	extent = new esri.geometry.Extent(-124.5, 45.55, -116.9, 47.6, new esri.SpatialReference({ wkid: 4326 }));
+	extent = esri.geometry.geographicToWebMercator(extent);
+	map = new esri.Map(dom.byId("map"), {
+		extent: extent
+	});
 
 	geometryService = new esri.tasks.GeometryService("http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer");
 
