@@ -6,11 +6,14 @@
 
 require(["dojo/dom", "dojo/on", "dojo/html", "dijit/Dialog", "proj4js", "esri/map", "esri/tasks/geometry",
 
-"/Scripts/proj4js/defs/EPSG2927.js", "/Scripts/proj4js/defs/GOOGLE.js",
+"/Scripts/proj4js/defs/EPSG2927.js", "/Scripts/proj4js/defs/GOOGLE.js", "/Scripts/clientProjection.js",
 "dojo/domReady!"], function (dom, on, html, Dialog, Proj4js) {
 	"use strict";
 
 	var map, extent, basemap, geometryService, dialog;
+
+	/////For debugging purposes, make global.
+	////window.Proj4js = Proj4js;
 
 	function getProjectedPoint(point) {
 		var sourcePrj, destPrj;
@@ -24,13 +27,7 @@ require(["dojo/dom", "dojo/on", "dojo/html", "dijit/Dialog", "proj4js", "esri/ma
 			point = point.mapPoint;
 		}
 
-		point = point.toJson();
-		Proj4js.transform(sourcePrj, destPrj, point);
-		if (point.spatialReference) {
-			point.spatialReference = new esri.SpatialReference({ wkid: 2927 });
-		}
-
-		return new esri.geometry.Point(point);
+		return Proj4js.projectEsriGeometry(point, sourcePrj, destPrj);
 	}
 
 	// Create the map object
