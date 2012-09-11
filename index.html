@@ -4,6 +4,17 @@
 	<title></title>
 	<link href="Style/index.css" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" type="text/css" href="http://serverapi.arcgisonline.com/jsapi/arcgis/3.1/js/dojo/dijit/themes/claro/claro.css">
+	
+	<script type="text/javascript">
+	var dojoConfig = { 
+		packages: [{
+			"name": "proj4js",
+			"location": "/scripts/proj4js",
+			"main":"proj4js-compressed"
+		}]
+	};
+
+	</script>
 	<script type="text/javascript" src="http://serverapi.arcgisonline.com/jsapi/arcgis/?v=3.1compact"></script>
 	<script src="Scripts/json2-min.js" type="text/javascript"></script> <!-- This is only needed for older browsers (e.g., IE7) -->
 	<script src="Scripts/index.js" type="text/javascript"></script>

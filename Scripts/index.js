@@ -4,10 +4,10 @@
 /// <reference path="jsapi_vsdoc_v31.js" />
 /// <reference path="proj4js/proj4js-combined.js" />
 
-require(["dojo/dom", "dojo/on", "dojo/html", "dijit/Dialog", "esri/map", "esri/tasks/geometry",
-"/Scripts/proj4js/proj4js-combined.js",
+require(["dojo/dom", "dojo/on", "dojo/html", "dijit/Dialog", "proj4js", "esri/map", "esri/tasks/geometry",
+
 "/Scripts/proj4js/defs/EPSG2927.js", "/Scripts/proj4js/defs/GOOGLE.js",
-"dojo/domReady!"], function (dom, on, html, Dialog, Map, Geometry, Proj4js) {
+"dojo/domReady!"], function (dom, on, html, Dialog, Proj4js) {
 	"use strict";
 
 	var map, extent, basemap, geometryService, dialog;
