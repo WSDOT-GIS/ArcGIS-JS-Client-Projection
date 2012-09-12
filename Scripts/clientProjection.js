@@ -41,12 +41,6 @@ define(["proj4js"], function (Proj4js) {
 		/// <returns type="esri.Geometry">Returns a projected copy of the input geometry.</returns>
 
 		var output;
-		////if (sourcePrj === null || sourcePrj === undefined) {
-		////	sourcePrj = new Proj4js.Proj("EPSG:3857");
-		////}
-		////if (destPrj === null || destPrj === undefined) {
-		////	destPrj = new Proj4js.Proj("EPSG:2927"); // Set projection from option instead of hard-coding.
-		////}
 
 		// Get the source projection from the geometry if not provided via parameter...
 		if (!sourcePrj && geometry.spatialReference && geometry.spatialReference.wkid) {
