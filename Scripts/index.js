@@ -66,7 +66,7 @@ require(["require", "dojo/dom", "dojo/on", "dojo/html", "dojo/query", "dijit/Dia
 
 		on(query("button[data-geometryType]"), "click", function (mouseEvent) {
 			var button = this, geometryType;
-			geometryType = button.dataset.geometrytype;
+			geometryType = dojo.attr(button, "data-geometrytype");
 			drawToolbar.activate(geometryType);
 		});
 
