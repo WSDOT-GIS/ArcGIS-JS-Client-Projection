@@ -11,7 +11,7 @@ define(["proj4js"], function (Proj4js) {
 		var g, output;
 		// Convert the input geometry (a coordinate pair array) into an object that can be converted by Proj4js.
 		g = { x: geometry[0], y: geometry[1] };
-		g = Proj4js.transform(g, sourcePrj, destPrj);
+		g = Proj4js.transform(sourcePrj, destPrj, g);
 		output = [g.x, g.y];
 		return output;
 	}
@@ -23,7 +23,7 @@ define(["proj4js"], function (Proj4js) {
 		for (i = 0, l = points.length; i < l; i += 1) {
 			point = points[i];
 
-			if (point instanceof Array) {
+			if (point[0] instanceof Array) {
 				output.push(projectArrays(point, sourcePrj, destPrj));
 			} else {
 				output.push(projectNumberPair(point, sourcePrj, destPrj));

@@ -18,3 +18,11 @@
     background-color: #eefeff;
     padding: 0.15em;
 }
+#toolbar 
+{
+    position: absolute;
+    right: 1em;
+    top: 2.5em;
+    background-color: #eefeff;
+    padding: 0.15em;
+}

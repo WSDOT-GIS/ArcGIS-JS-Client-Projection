@@ -4,7 +4,7 @@
 /// <reference path="jsapi_vsdoc_v31.js" />
 /// <reference path="proj4js/proj4js-combined.js" />
 
-require(["require", "dojo/dom", "dojo/on", "dojo/html", "dojo/query", "dijit/Dialog", "proj4js", "proj4js/defs/EPSG/2927", "proj4js/defs/EPSG/3857", "esri/map", "esri/tasks/geometry",
+require(["require", "dojo/dom", "dojo/on", "dojo/html", "dojo/query", "dijit/Dialog", "proj4js", "proj4js/defs/EPSG/2927", "proj4js/defs/EPSG/3857", "esri/map", "esri/tasks/geometry", "esri/toolbars/draw",
 "/Scripts/clientProjection.js",
 "dojo/domReady!"], function (require, dom, on, html, query, Dialog, Proj4js, epsg2927, epsg3857) {
 	"use strict";
@@ -20,11 +20,6 @@ require(["require", "dojo/dom", "dojo/on", "dojo/html", "dojo/query", "dijit/Dia
 		// Set up the source and destination projections.
 		sourcePrj = epsg3857;  // Web mercator auxiliary sphere
 		destPrj = epsg2927; //new Proj4js.Proj('EPSG:2927'); // WA NAD HARN State Plane South
-
-		// If this is a click event, the parameter will be an event instead of a point.  Get the map point from the event.
-		if (point.mapPoint) {
-			point = point.mapPoint;
-		}
 
 		return Proj4js.projectEsriGeometry(point, sourcePrj, destPrj);
 	}
@@ -44,21 +39,49 @@ require(["require", "dojo/dom", "dojo/on", "dojo/html", "dojo/query", "dijit/Dia
 
 	// When the layer has loaded, add an event that will resize the map when the browser window resizes.
 	dojo.connect(map, "onLoad", function () {
+		var drawToolbar;
+
+
 		on(window, "resize", function () {
 			map.resize();
 		});
 
-		dojo.connect(map, "onClick", function (evt) {
+		drawToolbar = new esri.toolbars.Draw(map);
+
+		function getSymbol(geometry) {
+			/// <summary>Gets a Simple...Symbol appropriate for the geometry type.</summary>
+			/// <param name="geometry" type="esri.geometry.Geometry">A geometry</param>
+			/// <returns type="esri.symbol.Symbol" />
+			var symbol;
+			if (/(?:multi)?point/i.test(geometry.type)) {
+				symbol = new esri.symbol.SimpleMarkerSymbol();
+			} else if (geometry.type === "polyline") {
+				symbol = new esri.symbol.SimpleLineSymbol();
+			} else if (geometry.type === "polygon" || geometry.type === "extent") {
+				symbol = new esri.symbol.SimpleFillSymbol();
+			}
+
+			return symbol;
+		}
+
+		on(query("button[data-geometryType]"), "click", function (mouseEvent) {
+			var button = this, geometryType;
+			geometryType = button.dataset.geometrytype;
+			drawToolbar.activate(geometryType);
+		});
+
+		dojo.connect(drawToolbar, "onDrawEnd", function (geometry) {
 			var originalPoint, proj4jsPoint, params, content;
-			originalPoint = evt.mapPoint;
-			map.graphics.add(new esri.Graphic(originalPoint, new esri.symbol.SimpleMarkerSymbol()));
+			drawToolbar.deactivate();
+			originalPoint = geometry;
+			map.graphics.add(new esri.Graphic(originalPoint, getSymbol(geometry)));
 			proj4jsPoint = getProjectedPoint(originalPoint);
 
 			params = new esri.tasks.ProjectParameters();
 			params.geometries = [originalPoint];
 			params.outSR = new esri.SpatialReference({ wkid: 2927 });
 
-			content = ["<dl><dt>Original Point</dt><dd>", JSON.stringify(originalPoint.toJson()),
+			content = ["<dl><dt>Original Geometry</dt><dd>", JSON.stringify(originalPoint.toJson()),
 				"</dd><dt>Proj4js Projected</dt><dd>", JSON.stringify(proj4jsPoint.toJson()),
 				"</dd><dt>Geometry Service Projected</dt><dd id='geometryServiceResults'><progress>Please wait...</progress></dd>"].join("");
 
@@ -83,7 +106,6 @@ require(["require", "dojo/dom", "dojo/on", "dojo/html", "dojo/query", "dijit/Dia
 			}, function (error) {
 				html.set(dom.byId("geometryServiceResults"), error.message || error);
 			});
-
 		});
 	});
 });
