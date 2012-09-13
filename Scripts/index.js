@@ -4,9 +4,9 @@
 /// <reference path="jsapi_vsdoc_v31.js" />
 /// <reference path="proj4js/proj4js-combined.js" />
 
-require(["require", "dojo/dom", "dojo/on", "dojo/html", "dijit/Dialog", "proj4js", "proj4js/defs/EPSG/2927", "esri/map", "esri/tasks/geometry",
+require(["require", "dojo/dom", "dojo/on", "dojo/html", "dojo/query", "dijit/Dialog", "proj4js", "proj4js/defs/EPSG/2927", "proj4js/defs/EPSG/3857", "esri/map", "esri/tasks/geometry",
 "/Scripts/clientProjection.js",
-"dojo/domReady!"], function (require, dom, on, html, Dialog, Proj4js) {
+"dojo/domReady!"], function (require, dom, on, html, query, Dialog, Proj4js, epsg2927, epsg3857) {
 	"use strict";
 
 	var map, extent, basemap, geometryService, dialog;
@@ -18,8 +18,8 @@ require(["require", "dojo/dom", "dojo/on", "dojo/html", "dijit/Dialog", "proj4js
 		var sourcePrj, destPrj;
 
 		// Set up the source and destination projections.
-		sourcePrj = new Proj4js.Proj('GOOGLE');  // Web mercator auxiliary sphere
-		destPrj = new Proj4js.Proj('EPSG:2927'); // WA NAD HARN State Plane South
+		sourcePrj = epsg3857;  // Web mercator auxiliary sphere
+		destPrj = epsg2927; //new Proj4js.Proj('EPSG:2927'); // WA NAD HARN State Plane South
 
 		// If this is a click event, the parameter will be an event instead of a point.  Get the map point from the event.
 		if (point.mapPoint) {
