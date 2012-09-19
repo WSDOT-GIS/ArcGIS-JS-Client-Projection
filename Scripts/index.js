@@ -81,9 +81,9 @@ require(["require", "dojo/dom", "dojo/on", "dojo/html", "dojo/query", "dijit/Dia
 			params.geometries = [originalPoint];
 			params.outSR = new esri.SpatialReference({ wkid: 2927 });
 
-			content = ["<dl><dt>Original Geometry</dt><dd>", JSON.stringify(originalPoint.toJson()),
+			content = ["<div><dl><dt>Original Geometry</dt><dd>", JSON.stringify(originalPoint.toJson()),
 				"</dd><dt>Proj4js Projected</dt><dd>", JSON.stringify(proj4jsPoint.toJson()),
-				"</dd><dt>Geometry Service Projected</dt><dd id='geometryServiceResults'><progress>Please wait...</progress></dd>"].join("");
+				"</dd><dt>Geometry Service Projected</dt><dd id='geometryServiceResults'><progress>Please wait...</progress></dd></div>"].join("");
 
 			if (dialog) {
 				// Update dialog
