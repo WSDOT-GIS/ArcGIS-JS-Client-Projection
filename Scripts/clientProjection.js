@@ -1,4 +1,4 @@
-﻿/*global define*/
+﻿/*global define, esri*/
 define(["proj4js"], function (Proj4js) {
 	"use strict";
 
@@ -66,11 +66,9 @@ define(["proj4js"], function (Proj4js) {
 
 		// Convert the output object into an esri.Geometry if that class is available.
 
-		/*jslint undef: true */
 		if (esri !== undefined && esri.geometry !== undefined && esri.geometry.fromJson !== undefined) {
 			output = esri.geometry.fromJson(output);
 		}
-		/*jslint undef: false */
 
 		return output;
 	}
