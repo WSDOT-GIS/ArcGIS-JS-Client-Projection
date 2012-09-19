@@ -5,7 +5,7 @@
 /// <reference path="proj4js/proj4js-combined.js" />
 
 require(["require", "dojo/dom", "dojo/on", "dojo/html", "dojo/query", "dijit/Dialog", "proj4js", "proj4js/defs/EPSG/2927", "proj4js/defs/EPSG/3857", "esri/map", "esri/tasks/geometry", "esri/toolbars/draw",
-"/Scripts/clientProjection.js",
+"clientProjection",
 "dojo/domReady!"], function (require, dom, on, html, query, Dialog, Proj4js, epsg2927, epsg3857) {
 	"use strict";
 

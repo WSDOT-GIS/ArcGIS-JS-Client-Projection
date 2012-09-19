@@ -8,11 +8,18 @@
 	<script type="text/javascript">
 	var dojoConfig = { 
 		async: true,
-		packages: [{
-			"name": "proj4js",
-			"location": location.pathname.replace(/\/[^/]+$/, "") + "/Scripts/proj4js",
-			"main":"proj4js-compressed"
-		}]
+		packages: [
+			{
+				"name": "proj4js",
+				"location": location.pathname.replace(/\/[^/]+$/, "") + "/Scripts/proj4js",
+				"main":"proj4js-compressed"
+			},
+			{
+				"name": "clientProjection",
+				"location": location.pathname.replace(/\/[^/]+$/, "") + "/Scripts",
+				"main": "clientProjection"
+			}
+		]
 	};
 	</script>
 	<script type="text/javascript" src="http://serverapi.arcgisonline.com/jsapi/arcgis/?v=3.1compact"></script>
