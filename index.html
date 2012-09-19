@@ -10,7 +10,7 @@
 		async: true,
 		packages: [{
 			"name": "proj4js",
-			"location": "/scripts/proj4js",
+			"location": location.pathname.replace(/\/[^/]+$/, "") + "/Scripts/proj4js",
 			"main":"proj4js-compressed"
 		}]
 	};
