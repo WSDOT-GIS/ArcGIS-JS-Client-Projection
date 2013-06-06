@@ -1,5 +1,5 @@
 ﻿/*global define, esri*/
-define(["proj4js"], function (Proj4js) {
+define(["//cdnjs.cloudflare.com/ajax/libs/proj4js/1.1.0/proj4js-compressed.js"], function () {
 	"use strict";
 
 	function projectNumberPair(geometry, sourcePrj, destPrj) {
