@@ -13,8 +13,8 @@
 #instructions 
 {
     position: absolute;
-    right: 1em;
-    top: 1em;
+    left: 1em;
+    bottom: 1em;
     background-color: #eefeff;
     padding: 0.15em;
 }
@@ -22,7 +22,7 @@
 {
     position: absolute;
     right: 1em;
-    top: 2.5em;
+    top: 1em;
     background-color: #eefeff;
     padding: 0.15em;
 }
