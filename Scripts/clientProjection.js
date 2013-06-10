@@ -61,7 +61,7 @@ define(["//cdnjs.cloudflare.com/ajax/libs/proj4js/1.1.0/proj4js-compressed.js"],
 
 		// Set the spatialReference property if the input geometry had this property defined...
 		if (geometry.spatialReference) {
-			output.spatialReference = { wkid: destPrj.srsProjNumber };
+			output.spatialReference = { wkid: Number(destPrj.srsProjNumber) };
 		}
 
 		// Convert the output object into an esri.Geometry if that class is available.
