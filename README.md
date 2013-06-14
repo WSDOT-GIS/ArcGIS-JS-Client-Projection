@@ -3,7 +3,7 @@
 
 The purpose of this project is to compare the results of two different projection methods: the client-side [Proj4JS] library and an [ArcGIS Server Geometry Service].
 
-* [Demo](http://wsdot-gis.github.com/Proj4JS-vs-ArcGIS-Server-Geometry-Service/)
+* [Demo](http://wsdot-gis.github.io/ArcGIS-JS-Client-Projection/)
 
 ## References ##
 * This project references [Proj4JS], hosted on [cdnjs].
