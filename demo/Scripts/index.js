@@ -12,15 +12,16 @@ require(["dojo/dom", "dojo/on", "dojo/html", "dojo/query", "dojo/dom-attr", "dij
 	"esri/toolbars/draw",
 	"esri/symbols/SimpleMarkerSymbol", "esri/symbols/SimpleLineSymbol", "esri/symbols/SimpleFillSymbol",
 	"esri/tasks/ProjectParameters",
-	"use!clientProjection", "dojo/domReady!"
+	"esri/geometry/jsonUtils",
+	"clientProjection", "dojo/domReady!"
 ], function (dom, on, html, query, domAttr, Dialog, Map, Graphic, SpatialReference, Extent, webMercatorUtils, GeometryService, Draw,
-	SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol, ProjectParameters) {
+	SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol, ProjectParameters, jsonUtils, clientProjection) {
 	"use strict";
 
-	var map, extent, basemap, geometryService, dialog, epsg2927, epsg3857;
+	var map, extent, geometryService, dialog, epsg2927, epsg3857;
 
 	Proj4js.defs["EPSG:2927"] = "+proj=lcc +lat_1=47.33333333333334 +lat_2=45.83333333333334 +lat_0=45.33333333333334 +lon_0=-120.5 +x_0=500000.0001016001 +y_0=0 +ellps=GRS80 +to_meter=0.3048006096012192 +no_defs";
-	epsg2927 = new Proj4js.Proj("EPSG:2927")
+	epsg2927 = new Proj4js.Proj("EPSG:2927");
 	epsg3857 = new Proj4js.Proj("GOOGLE");
 
 	function getProjectedPoint(point) {
@@ -30,7 +31,7 @@ require(["dojo/dom", "dojo/on", "dojo/html", "dojo/query", "dojo/dom-attr", "dij
 		sourcePrj = epsg3857;  // Web mercator auxiliary sphere
 		destPrj = epsg2927; //new Proj4js.Proj('EPSG:2927'); // WA NAD HARN State Plane South
 
-		return Proj4js.projectEsriGeometry(point, sourcePrj, destPrj);
+		return clientProjection.projectEsriGeometry(point, sourcePrj, destPrj, jsonUtils.fromJson);
 	}
 
 	// Create the map object
@@ -70,14 +71,14 @@ require(["dojo/dom", "dojo/on", "dojo/html", "dojo/query", "dojo/dom-attr", "dij
 			return symbol;
 		}
 
-		on(query("button[data-geometryType]"), "click", function (mouseEvent) {
+		on(query("button[data-geometryType]"), "click", function (/*mouseEvent*/) {
 			var button = this, geometryType;
 			geometryType = domAttr.get(button, "data-geometrytype");
 			drawToolbar.activate(geometryType);
 		});
 
-		dojo.connect(drawToolbar, "onDrawEnd", function (geometry) {
-			var originalPoint, proj4jsPoint, params, content;
+		drawToolbar.on("draw-end", function (evt) {
+			var originalPoint, proj4jsPoint, params, content, geometry = evt.geometry;
 			drawToolbar.deactivate();
 			originalPoint = geometry;
 			map.graphics.add(new Graphic(originalPoint, getSymbol(geometry)));

@@ -20,9 +20,9 @@
 				main: "proj4js-compressed"
 			},
 			{
-				"name": "clientProjection",
-				"location": location.pathname.replace(/\/[^\/]+$/, "") + "/../Scripts",
-				"main": "clientProjection.min"
+				name: "clientProjection",
+				location: location.pathname.replace(/\/[^\/]+$/, "") + "/../Scripts",
+				main: "clientProjection.min"
 			},
 
 		],
@@ -30,15 +30,6 @@
 			"proj4js/proj4js-compressed": {
 				attach: function () {
 					return Proj4js;
-				}
-			},
-			"clientProjection/clientProjection.min": {
-				deps: ["use!proj4js"],
-				attach: function (Proj4js) {
-					return {
-						projectEsriGeometry: Proj4js.projectEsriGeometry,
-						EsriProjector: Proj4js.EsriProjector
-					}
 				}
 			}
 		}

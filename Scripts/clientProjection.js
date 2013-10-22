@@ -1,5 +1,18 @@
-﻿/*global Proj4js*/
-(function () {
+﻿/*global define, require, module*/
+(function (root, factory) {
+	if (typeof define === 'function' && define.amd) {
+		// AMD. Register as an anonymous module.
+		define(['use!proj4js'], factory);
+	} else if (typeof exports === 'object') {
+		// Node. Does not work with strict CommonJS, but
+		// only CommonJS-like enviroments that support module.exports,
+		// like Node.
+		module.exports = factory(require('proj4js'));
+	} else {
+		// Browser globals (root is window)
+		root.returnExports = factory(root.Proj4js);
+	}
+}(this, function (Proj4js) {
 	"use strict";
 
 	function projectNumberPair(geometry, sourcePrj, destPrj) {
@@ -33,7 +46,7 @@
 		return output;
 	}
 
-	function projectEsriGeometry(geometry, sourcePrj, destPrj) {
+	function projectEsriGeometry(geometry, sourcePrj, destPrj, outputParser) {
 		/// <summary>Projects an esri.Geometry from one projection to another using Proj4js.</summary>
 		/// <param name="geometry" type="esri.Geometry|object">An esri.Geometry object (or a JSON object that can be passed to a geometry constructor).</param>
 		/// <param name="sourcePrj" type="Proj4js.Proj">Source Projection</param>
@@ -65,18 +78,20 @@
 		}
 
 		// Convert the output object into an esri.Geometry if that class is available.
-
-		if (esri !== undefined && esri.geometry !== undefined && esri.geometry.fromJson !== undefined) {
-			output = esri.geometry.fromJson(output);
+		if (typeof outputParser === "function") {
+			output = outputParser(output);
 		}
+
+		////if (esri !== undefined && esri.geometry !== undefined && esri.geometry.fromJson !== undefined) {
+		////	output = esri.geometry.fromJson(output);
+		////}
 
 		return output;
 	}
 
-	// Add the projectEsriGeometry method to the Proj4js module.
-	Proj4js.projectEsriGeometry = projectEsriGeometry;
 
-	function Projector(inputProj, outputProj) {
+
+	function Projector(inputProj, outputProj, outputParser) {
 		/// <summary>A class that can project an esri.Geometry from one projection to another.</summary>
 		/// <param name="inputProj" type="Proj4js.Proj">The input projection system.</param>
 		/// <param name="outputProj" type="Proj4js.Proj">The output projection system.</param>
@@ -88,11 +103,19 @@
 		}
 		this.inputProj = inputProj;
 		this.outputProj = outputProj;
+		this.outputParser = outputParser;
 	}
 
 	Projector.prototype.project = function (geometry) {
-		return projectEsriGeometry(geometry, this.inputProj, this.outputProj);
+		return projectEsriGeometry(geometry, this.inputProj, this.outputProj, this.outputParser);
 	};
 
-	Proj4js.EsriProjector = Projector;
-}());
+	////// Add the projectEsriGeometry method to the Proj4js module.
+	////Proj4js.projectEsriGeometry = projectEsriGeometry;
+	////Proj4js.EsriProjector = Projector;
+
+	return {
+		projectEsriGeometry: projectEsriGeometry,
+		Projector: Projector
+	};
+}));
