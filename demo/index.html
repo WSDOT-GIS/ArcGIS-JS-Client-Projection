@@ -9,13 +9,39 @@
 	<script type="text/javascript">
 	var dojoConfig = { 
 		async: true,
+		paths: {
+			use: "//cdnjs.cloudflare.com/ajax/libs/use.js/0.2.0/use.min",
+			proj4js: "//cdnjs.cloudflare.com/ajax/libs/proj4js/1.1.0/"
+		},
 		packages: [
+			{
+				name: "proj4js",
+				location: "proj4js",
+				main: "proj4js-compressed"
+			},
 			{
 				"name": "clientProjection",
 				"location": location.pathname.replace(/\/[^\/]+$/, "") + "/../Scripts",
 				"main": "clientProjection"
+			},
+
+		],
+		use: {
+			"proj4js/proj4js-compressed": {
+				attach: function () {
+					return Proj4js;
+				}
+			},
+			"clientProjection/clientProjection": {
+				deps: ["use!proj4js"],
+				attach: function (Proj4js) {
+					return {
+						projectEsriGeometry: Proj4js.projectEsriGeometry,
+						EsriProjector: Proj4js.EsriProjector
+					}
+				}
 			}
-		]
+		}
 	};
 	</script>
 	<script type="text/javascript" src="http://serverapi.arcgisonline.com/jsapi/arcgis/3.5compact/"></script>

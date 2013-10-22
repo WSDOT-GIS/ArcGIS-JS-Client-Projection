@@ -12,7 +12,7 @@ require(["dojo/dom", "dojo/on", "dojo/html", "dojo/query", "dojo/dom-attr", "dij
 	"esri/toolbars/draw",
 	"esri/symbols/SimpleMarkerSymbol", "esri/symbols/SimpleLineSymbol", "esri/symbols/SimpleFillSymbol",
 	"esri/tasks/ProjectParameters",
-	"clientProjection", "dojo/domReady!"
+	"use!clientProjection", "dojo/domReady!"
 ], function (dom, on, html, query, domAttr, Dialog, Map, Graphic, SpatialReference, Extent, webMercatorUtils, GeometryService, Draw,
 	SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol, ProjectParameters) {
 	"use strict";
