@@ -11,12 +11,8 @@ The purpose of this project is to compare the results of two different projectio
 * [use.js] source is available on GitHub.
 * References the [ArcGIS API for JavaScript].
 
-## Licensing ##
-Licensed under [The MIT License].
-
 [ArcGIS API for JavaScript]:http://links.esri.com/javascript
 [ArcGIS Server Geometry Service]:http://resources.arcgis.com/en/help/rest/apiref/
 [cdnjs]:http://cdnjs.com/
 [Proj4JS]:http://trac.osgeo.org/proj4js/
 [use.js]:https://github.com/jaubourg/usejs
-[The MIT License]:http://opensource.org/licenses/MIT
